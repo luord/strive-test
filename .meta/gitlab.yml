@@ -1,0 +1,21 @@
+build:
+  stage: test
+  image: luord/docker
+  script:
+    - make lint
+    - make test
+
+deploy:
+  stage: deploy
+  image: docker
+  services:
+    - docker:dind
+  before_script:
+    - apk add curl bash nodejs
+    - curl https://cli-assets.heroku.com/install.sh | bash
+    - docker login -u _ -p $HEROKU_API_KEY registry.heroku.com
+  script:
+    - docker build -t registry.heroku.com/$HEROKU_APP/web -f .meta/Dockerfile .
+    - heroku container:release --app $HEROKU_APP web
+  after_script:
+    - docker logout

@@ -1,0 +1,37 @@
+[tool.poetry]
+name = "quiz"
+version = "0.1.0"
+description = ""
+authors = ["Luis Orduz <lo@luord.com>"]
+
+[tool.poe.env]
+FLASK_ENV = "development"
+FLASK_SECRET_KEY = "something"
+
+[tool.poe.tasks]
+serve.cmd = "python -m flask run -h 0.0.0.0 -p 8000 --extra-files src/templates"
+serve.env = { FLASK_APP = 'quiz' }
+
+test = "python -m pytest"
+
+_lint = "python -m flake8 src tests"
+_types = "python -m mypy src tests"
+lint = ["_lint", "_types"]
+
+[tool.pytest.ini_options]
+xfail_strict = true
+addopts = "--cov-report term-missing --cov-fail-under 90 --cov=quiz tests/"
+
+[tool.poetry.dependencies]
+python = "^3.9"
+Flask = "^2.0.2"
+Flask-SQLAlchemy = "^2.5.1"
+
+[tool.poetry.dev-dependencies]
+flake8 = "^4.0.1"
+mypy = "^0.910"
+pytest-cov = "^3.0.0"
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"

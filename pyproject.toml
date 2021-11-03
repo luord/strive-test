@@ -7,10 +7,10 @@ authors = ["Luis Orduz <lo@luord.com>"]
 [tool.poe.env]
 FLASK_ENV = "development"
 FLASK_SECRET_KEY = "something"
+FLASK_APP = "quiz"
 
 [tool.poe.tasks]
-serve.cmd = "python -m flask run -h 0.0.0.0 -p 8000 --extra-files src/templates"
-serve.env = { FLASK_APP = 'quiz' }
+serve = "python -m flask run -h 0.0.0.0 -p 5500 --extra-files src/templates"
 
 test = "python -m pytest"
 
@@ -22,10 +22,14 @@ lint = ["_lint", "_types"]
 xfail_strict = true
 addopts = "--cov-report term-missing --cov-fail-under 90 --cov=quiz tests/"
 
+[tool.mypy]
+ignore_missing_imports = true
+
 [tool.poetry.dependencies]
 python = "^3.9"
 Flask = "^2.0.2"
 Flask-SQLAlchemy = "^2.5.1"
+Flask-Admin = "^1.5.8"
 
 [tool.poetry.dev-dependencies]
 flake8 = "^4.0.1"

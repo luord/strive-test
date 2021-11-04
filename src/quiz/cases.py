@@ -1,4 +1,4 @@
-from dataclasses import dataclass
+from dataclasses import dataclass, asdict
 from typing import Protocol
 
 from quiz.domain import Quiz, Submission, NoQuestionsException
@@ -49,14 +49,11 @@ class CreateSubmissionCase:
 
         quiz = Quiz(**quiz)
 
-        submission = self.submission_resource.upsert(quiz=quiz.ix)
-        submission["quiz"] = quiz
-
-        submission = Submission(**submission)
-
+        submission = Submission(quiz=quiz)
         submission.add_response(text)
+        submission.quiz = quiz.ix
 
-        self.submission_resource.upsert(asdict(**submission))
+        self.submission_resource.upsert(**asdict(submission))
 
         return submission
 
@@ -67,6 +64,6 @@ class CreateSubmissionCase:
 
         response = submission.add_response(text)
 
-        self.submission_resource.upsert(asdict(**submission))
+        self.submission_resource.upsert(**asdict(submission))
 
         return response

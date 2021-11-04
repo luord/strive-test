@@ -1,7 +1,7 @@
 from flask_admin import Admin
 from flask_admin.contrib.sqla import ModelView
 
-from quiz.domain import db, Quiz
+from quiz.repository import db, Quiz
 
 
 admin = Admin()

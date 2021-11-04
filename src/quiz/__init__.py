@@ -6,7 +6,7 @@ from flask import Flask
 from quiz.interface.main import bp
 from quiz.interface.admin import admin
 
-from quiz.domain import db
+from quiz.repository import db
 
 
 INIT_PARAMS = {

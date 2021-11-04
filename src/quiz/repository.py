@@ -20,7 +20,7 @@ class Quiz(db.Model):  # type: ignore
         return data
 
     @classmethod
-    def get_random(cls) -> dict:
+    def get_one(cls) -> dict:
         return cls.query.first().to_dict()
 
     @classmethod
@@ -50,7 +50,7 @@ class Submission(db.Model):  # type: ignore
         return data
 
     @classmethod
-    def get_random(cls) -> dict:
+    def get_one(cls) -> dict:
         return cls.query.first().to_dict()
 
     @classmethod

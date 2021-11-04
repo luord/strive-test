@@ -1,0 +1,4 @@
+<form method="post" action="/{{ step if step }}">
+  <label for="response">{{ quiz.questions[step or 0] }}</label>
+  <input name="response">
+</form>

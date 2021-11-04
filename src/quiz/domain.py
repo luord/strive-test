@@ -17,15 +17,15 @@ class Quiz:
 
 @dataclass
 class Submission:
-    ix: str
     quiz: Quiz
+    ix: str = None
     responses: list[str] = field(default_factory=list)
 
     def __post_init__(self):
         if self.responses:
             return
 
-        self.responses = ["" for _ in len(self.quiz.questions)]
+        self.responses = ["" for _ in self.quiz.questions]
 
     def add_response(self, text) -> int:
         for ix, response in enumerate(self.responses):

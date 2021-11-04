@@ -1,34 +1,37 @@
-from dataclasses import dataclass, asdict
-from uuid import uuid4
-
-from flask_sqlalchemy import SQLAlchemy
+from dataclasses import dataclass, field
 
 
-db = SQLAlchemy()
+class NoQuestionsException(Exception):
+    pass
 
 
-@dataclass
-class Quiz(db.Model):  # type: ignore
-    ix: str = db.Column(
-        db.String(36), primary_key=True, default=lambda: str(uuid4())
-    )
-    questions: list[str] = db.Column(db.JSON)
-
-    def to_dict(self):
-        data = asdict(self)
-
-        return data
+class NoMoreQuestionsException(Exception):
+    pass
 
 
 @dataclass
-class Submission(db.Model):  # type: ignore
-    ix: str = db.Column(
-        db.String(36), primary_key=True, default=lambda: str(uuid4())
-    )
-    quiz: str = db.Column(db.String, db.ForeignKey("quiz.ix"), nullable=False)
-    responses: list[str] = db.Column(db.JSON)
+class Quiz:
+    ix: str
+    questions: list[str]
 
-    def to_dict(self):
-        data = asdict(self)
 
-        return data
+@dataclass
+class Submission:
+    ix: str
+    quiz: Quiz
+    responses: list[str] = field(default_factory=list)
+
+    def __post_init__(self):
+        if self.responses:
+            return
+
+        self.responses = ["" for _ in len(self.quiz.questions)]
+
+    def add_response(self, text) -> int:
+        for ix, response in enumerate(self.responses):
+            if response:
+                continue
+            self.responses[ix] = text
+            return ix + 1
+        else:
+            raise NoMoreQuestionsException()
